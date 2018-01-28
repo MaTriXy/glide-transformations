@@ -1,7 +1,7 @@
 package jp.wasabeef.glide.transformations.gpu;
 
 /**
- * Copyright (C) 2015 Wasabeef
+ * Copyright (C) 2018 Wasabeef
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@ package jp.wasabeef.glide.transformations.gpu;
  * limitations under the License.
  */
 
-import android.content.Context;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import java.security.MessageDigest;
 import jp.co.cyberagent.android.gpuimage.GPUImageColorInvertFilter;
 
 /**
@@ -26,15 +24,28 @@ import jp.co.cyberagent.android.gpuimage.GPUImageColorInvertFilter;
  */
 public class InvertFilterTransformation extends GPUFilterTransformation {
 
-  public InvertFilterTransformation(Context context) {
-    this(context, Glide.get(context).getBitmapPool());
+  private static final int VERSION = 1;
+  private static final String ID =
+      "jp.wasabeef.glide.transformations.gpu.InvertFilterTransformation." + VERSION;
+  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
+
+  public InvertFilterTransformation() {
+    super(new GPUImageColorInvertFilter());
   }
 
-  public InvertFilterTransformation(Context context, BitmapPool pool) {
-    super(context, pool, new GPUImageColorInvertFilter());
-  }
-
-  @Override public String getId() {
+  @Override public String toString() {
     return "InvertFilterTransformation()";
+  }
+
+  @Override public boolean equals(Object o) {
+    return o instanceof InvertFilterTransformation;
+  }
+
+  @Override public int hashCode() {
+    return ID.hashCode();
+  }
+
+  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
+    messageDigest.update(ID_BYTES);
   }
 }

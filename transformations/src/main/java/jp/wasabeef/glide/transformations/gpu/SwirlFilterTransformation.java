@@ -1,7 +1,7 @@
 package jp.wasabeef.glide.transformations.gpu;
 
 /**
- * Copyright (C) 2015 Wasabeef
+ * Copyright (C) 2018 Wasabeef
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,8 @@ package jp.wasabeef.glide.transformations.gpu;
  * limitations under the License.
  */
 
-import android.content.Context;
 import android.graphics.PointF;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import java.security.MessageDigest;
 import jp.co.cyberagent.android.gpuimage.GPUImageSwirlFilter;
 
 /**
@@ -27,20 +25,17 @@ import jp.co.cyberagent.android.gpuimage.GPUImageSwirlFilter;
  */
 public class SwirlFilterTransformation extends GPUFilterTransformation {
 
-  private float mRadius;
-  private float mAngle;
-  private PointF mCenter;
+  private static final int VERSION = 1;
+  private static final String ID =
+      "jp.wasabeef.glide.transformations.gpu.SwirlFilterTransformation." + VERSION;
+  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
-  public SwirlFilterTransformation(Context context) {
-    this(context, Glide.get(context).getBitmapPool());
-  }
+  private float radius;
+  private float angle;
+  private PointF center;
 
-  public SwirlFilterTransformation(Context context, BitmapPool pool) {
-    this(context, pool, .5f, 1.0f, new PointF(0.5f, 0.5f));
-  }
-
-  public SwirlFilterTransformation(Context context, float radius, float angle, PointF center) {
-    this(context, Glide.get(context).getBitmapPool(), radius, angle, center);
+  public SwirlFilterTransformation() {
+    this(.5f, 1.0f, new PointF(0.5f, 0.5f));
   }
 
   /**
@@ -48,20 +43,31 @@ public class SwirlFilterTransformation extends GPUFilterTransformation {
    * @param angle minimum 0.0, default 1.0
    * @param center default (0.5, 0.5)
    */
-  public SwirlFilterTransformation(Context context, BitmapPool pool, float radius, float angle,
-      PointF center) {
-    super(context, pool, new GPUImageSwirlFilter());
-    mRadius = radius;
-    mAngle = angle;
-    mCenter = center;
+  public SwirlFilterTransformation(float radius, float angle, PointF center) {
+    super(new GPUImageSwirlFilter());
+    this.radius = radius;
+    this.angle = angle;
+    this.center = center;
     GPUImageSwirlFilter filter = getFilter();
-    filter.setRadius(mRadius);
-    filter.setAngle(mAngle);
-    filter.setCenter(mCenter);
+    filter.setRadius(this.radius);
+    filter.setAngle(this.angle);
+    filter.setCenter(this.center);
   }
 
-  @Override public String getId() {
-    return "SwirlFilterTransformation(radius=" + mRadius +
-        ",angle=" + mAngle + ",center=" + mCenter.toString() + ")";
+  @Override public String toString() {
+    return "SwirlFilterTransformation(radius=" + radius + ",angle=" + angle + ",center="
+        + center.toString() + ")";
+  }
+
+  @Override public boolean equals(Object o) {
+    return o instanceof SwirlFilterTransformation;
+  }
+
+  @Override public int hashCode() {
+    return ID.hashCode();
+  }
+
+  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
+    messageDigest.update(ID_BYTES);
   }
 }

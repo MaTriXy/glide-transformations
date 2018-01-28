@@ -1,7 +1,7 @@
 package jp.wasabeef.glide.transformations.gpu;
 
 /**
- * Copyright (C) 2015 Wasabeef
+ * Copyright (C) 2018 Wasabeef
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@ package jp.wasabeef.glide.transformations.gpu;
  * limitations under the License.
  */
 
-import android.content.Context;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import java.security.MessageDigest;
 import jp.co.cyberagent.android.gpuimage.GPUImageKuwaharaFilter;
 
 /**
@@ -29,28 +27,37 @@ import jp.co.cyberagent.android.gpuimage.GPUImageKuwaharaFilter;
  */
 public class KuwaharaFilterTransformation extends GPUFilterTransformation {
 
-  private int mRadius;
+  private static final int VERSION = 1;
+  private static final String ID =
+      "jp.wasabeef.glide.transformations.gpu.KuwaharaFilterTransformation." + VERSION;
+  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
-  public KuwaharaFilterTransformation(Context context) {
-    this(context, Glide.get(context).getBitmapPool());
+  private int radius;
+
+  public KuwaharaFilterTransformation() {
+    this(25);
   }
 
-  public KuwaharaFilterTransformation(Context context, BitmapPool pool) {
-    this(context, pool, 25);
-  }
-
-  public KuwaharaFilterTransformation(Context context, int radius) {
-    this(context, Glide.get(context).getBitmapPool(), radius);
-  }
-
-  public KuwaharaFilterTransformation(Context context, BitmapPool pool, int radius) {
-    super(context, pool, new GPUImageKuwaharaFilter());
-    mRadius = radius;
+  public KuwaharaFilterTransformation(int radius) {
+    super(new GPUImageKuwaharaFilter());
+    this.radius = radius;
     GPUImageKuwaharaFilter filter = getFilter();
-    filter.setRadius(mRadius);
+    filter.setRadius(this.radius);
   }
 
-  @Override public String getId() {
-    return "KuwaharaFilterTransformation(radius=" + mRadius + ")";
+  @Override public String toString() {
+    return "KuwaharaFilterTransformation(radius=" + radius + ")";
+  }
+
+  @Override public boolean equals(Object o) {
+    return o instanceof KuwaharaFilterTransformation;
+  }
+
+  @Override public int hashCode() {
+    return ID.hashCode();
+  }
+
+  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
+    messageDigest.update(ID_BYTES);
   }
 }

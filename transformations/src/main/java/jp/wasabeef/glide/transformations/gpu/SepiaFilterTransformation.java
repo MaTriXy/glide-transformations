@@ -1,7 +1,7 @@
 package jp.wasabeef.glide.transformations.gpu;
 
 /**
- * Copyright (C) 2015 Wasabeef
+ * Copyright (C) 2018 Wasabeef
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@ package jp.wasabeef.glide.transformations.gpu;
  * limitations under the License.
  */
 
-import android.content.Context;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import java.security.MessageDigest;
 import jp.co.cyberagent.android.gpuimage.GPUImageSepiaFilter;
 
 /**
@@ -28,28 +26,37 @@ import jp.co.cyberagent.android.gpuimage.GPUImageSepiaFilter;
  */
 public class SepiaFilterTransformation extends GPUFilterTransformation {
 
-  private float mIntensity;
+  private static final int VERSION = 1;
+  private static final String ID =
+      "jp.wasabeef.glide.transformations.gpu.SepiaFilterTransformation." + VERSION;
+  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
-  public SepiaFilterTransformation(Context context) {
-    this(context, Glide.get(context).getBitmapPool());
+  private float intensity;
+
+  public SepiaFilterTransformation() {
+    this(1.0f);
   }
 
-  public SepiaFilterTransformation(Context context, BitmapPool pool) {
-    this(context, pool, 1.0f);
-  }
-
-  public SepiaFilterTransformation(Context context, float intensity) {
-    this(context, Glide.get(context).getBitmapPool(), intensity);
-  }
-
-  public SepiaFilterTransformation(Context context, BitmapPool pool, float intensity) {
-    super(context, pool, new GPUImageSepiaFilter());
-    mIntensity = intensity;
+  public SepiaFilterTransformation(float intensity) {
+    super(new GPUImageSepiaFilter());
+    this.intensity = intensity;
     GPUImageSepiaFilter filter = getFilter();
-    filter.setIntensity(mIntensity);
+    filter.setIntensity(this.intensity);
   }
 
-  @Override public String getId() {
-    return "SepiaFilterTransformation(intensity=" + mIntensity + ")";
+  @Override public String toString() {
+    return "SepiaFilterTransformation(intensity=" + intensity + ")";
+  }
+
+  @Override public boolean equals(Object o) {
+    return o instanceof SepiaFilterTransformation;
+  }
+
+  @Override public int hashCode() {
+    return ID.hashCode();
+  }
+
+  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
+    messageDigest.update(ID_BYTES);
   }
 }

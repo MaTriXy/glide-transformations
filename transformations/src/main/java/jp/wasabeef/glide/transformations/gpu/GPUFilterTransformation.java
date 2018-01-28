@@ -1,7 +1,7 @@
 package jp.wasabeef.glide.transformations.gpu;
 
 /**
- * Copyright (C) 2015 Wasabeef
+ * Copyright (C) 2018 Wasabeef
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,48 +18,52 @@ package jp.wasabeef.glide.transformations.gpu;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.Transformation;
-import com.bumptech.glide.load.engine.Resource;
+import android.support.annotation.NonNull;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+import java.security.MessageDigest;
 import jp.co.cyberagent.android.gpuimage.GPUImage;
 import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
+import jp.wasabeef.glide.transformations.BitmapTransformation;
 
-public class GPUFilterTransformation implements Transformation<Bitmap> {
+public class GPUFilterTransformation extends BitmapTransformation {
 
-  private Context mContext;
-  private BitmapPool mBitmapPool;
+  private static final int VERSION = 1;
+  private static final String ID =
+      "jp.wasabeef.glide.transformations.gpu.GPUFilterTransformation." + VERSION;
+  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
-  private GPUImageFilter mFilter;
+  private GPUImageFilter gpuImageFilter;
 
-  public GPUFilterTransformation(Context context, GPUImageFilter filter) {
-    this(context, Glide.get(context).getBitmapPool(), filter);
+  public GPUFilterTransformation(GPUImageFilter filter) {
+    this.gpuImageFilter = filter;
   }
 
-  public GPUFilterTransformation(Context context, BitmapPool pool, GPUImageFilter filter) {
-    mContext = context.getApplicationContext();
-    mBitmapPool = pool;
-    mFilter = filter;
+  @Override protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
+      @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+    GPUImage gpuImage = new GPUImage(context);
+    gpuImage.setImage(toTransform);
+    gpuImage.setFilter(gpuImageFilter);
+
+    return gpuImage.getBitmapWithFilterApplied();
   }
 
-  @Override
-  public Resource<Bitmap> transform(Resource<Bitmap> resource, int outWidth, int outHeight) {
-    Bitmap source = resource.get();
-    GPUImage gpuImage = new GPUImage(mContext);
-    gpuImage.setImage(source);
-    gpuImage.setFilter(mFilter);
-
-    Bitmap bitmap = gpuImage.getBitmapWithFilterApplied();
-
-    return BitmapResource.obtain(bitmap, mBitmapPool);
-  }
-
-  @Override public String getId() {
+  @Override public String toString() {
     return getClass().getSimpleName();
   }
 
   @SuppressWarnings("unchecked") public <T> T getFilter() {
-    return (T) mFilter;
+    return (T) gpuImageFilter;
+  }
+
+  @Override public boolean equals(Object o) {
+    return o instanceof GPUFilterTransformation;
+  }
+
+  @Override public int hashCode() {
+    return ID.hashCode();
+  }
+
+  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
+    messageDigest.update(ID_BYTES);
   }
 }
