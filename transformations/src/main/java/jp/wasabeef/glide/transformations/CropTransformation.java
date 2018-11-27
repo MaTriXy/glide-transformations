@@ -20,15 +20,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.support.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+
 import java.security.MessageDigest;
+
+import androidx.annotation.NonNull;
 
 public class CropTransformation extends BitmapTransformation {
 
   private static final int VERSION = 1;
   private static final String ID = "jp.wasabeef.glide.transformations.CropTransformation." + VERSION;
-  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
   public enum CropType {
     TOP,
@@ -51,8 +53,9 @@ public class CropTransformation extends BitmapTransformation {
     this.cropType = cropType;
   }
 
-  @Override protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
-      @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+  @Override
+  protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
+                             @NonNull Bitmap toTransform, int outWidth, int outHeight) {
 
     width = width == 0 ? toTransform.getWidth() : width;
     height = height == 0 ? toTransform.getHeight() : height;
@@ -79,23 +82,6 @@ public class CropTransformation extends BitmapTransformation {
     return bitmap;
   }
 
-  @Override public String toString() {
-    return "CropTransformation(width=" + width + ", height=" + height + ", cropType=" + cropType
-        + ")";
-  }
-
-  @Override public boolean equals(Object o) {
-    return o instanceof CropTransformation;
-  }
-
-  @Override public int hashCode() {
-    return ID.hashCode();
-  }
-
-  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
-    messageDigest.update(ID_BYTES);
-  }
-
   private float getTop(float scaledHeight) {
     switch (cropType) {
       case TOP:
@@ -107,5 +93,28 @@ public class CropTransformation extends BitmapTransformation {
       default:
         return 0;
     }
+  }
+
+  @Override
+  public String toString() {
+    return "CropTransformation(width=" + width + ", height=" + height + ", cropType=" + cropType + ")";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof CropTransformation &&
+        ((CropTransformation) o).width == width &&
+        ((CropTransformation) o).height == height &&
+        ((CropTransformation) o).cropType == cropType;
+  }
+
+  @Override
+  public int hashCode() {
+    return ID.hashCode() + width * 100000 + height * 1000 + cropType.ordinal() * 10;
+  }
+
+  @Override
+  public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+    messageDigest.update((ID + width + height + cropType).getBytes(CHARSET));
   }
 }

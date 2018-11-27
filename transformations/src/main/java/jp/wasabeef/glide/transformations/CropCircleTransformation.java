@@ -18,11 +18,14 @@ package jp.wasabeef.glide.transformations;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 import com.bumptech.glide.request.RequestOptions;
+
 import java.security.MessageDigest;
+
+import androidx.annotation.NonNull;
 
 /**
  * @deprecated Use {@link RequestOptions#circleCrop()}.
@@ -33,26 +36,30 @@ public class CropCircleTransformation extends BitmapTransformation {
   private static final int VERSION = 1;
   private static final String ID =
       "jp.wasabeef.glide.transformations.CropCircleTransformation." + VERSION;
-  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
-  @Override protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
-      @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+  @Override
+  protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
+                             @NonNull Bitmap toTransform, int outWidth, int outHeight) {
     return TransformationUtils.circleCrop(pool, toTransform, outWidth, outHeight);
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "CropCircleTransformation()";
   }
 
-  @Override public boolean equals(Object o) {
+  @Override
+  public boolean equals(Object o) {
     return o instanceof CropCircleTransformation;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return ID.hashCode();
   }
 
-  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
-    messageDigest.update(ID_BYTES);
+  @Override
+  public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+    messageDigest.update((ID).getBytes(CHARSET));
   }
 }

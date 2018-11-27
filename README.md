@@ -28,13 +28,13 @@ Please feel free to use this.
 #### Gradle
 ```groovy
 repositories {
-    jcenter()
+  jcenter()
 }
 
 dependencies {
-    implementation 'jp.wasabeef:glide-transformations:3.1.0'
-    // If you want to use the GPU Filters
-    implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+  implementation 'jp.wasabeef:glide-transformations:4.x.x'
+  // If you want to use the GPU Filters
+  implementation 'jp.co.cyberagent.android:gpuimage:2.x.x'
 }
 ```
 
@@ -42,23 +42,38 @@ dependencies {
 
 Set Glide Transform.
 
-```java
+```kotlin
 Glide.with(this).load(R.drawable.demo)
-  .apply(bitmapTransform(new BlurTransformation(25)))
-  .into((ImageView) findViewById(R.id.image));
+  .apply(bitmapTransform(BlurTransformation(25, 3)))
+  .into(imageView)
 ```
 
 ## Advanced Step 3
 
 You can set a multiple transformations.
 
-```java
-MultiTransformation multi = new MultiTransformation(
-    new BlurTransformation(25), 
-    new RoundedCornersTransformation(128, 0, RoundedCornersTransformation.CornerType.BOTTOM))))
+```kotlin
+val multi = MultiTransformation<Bitmap>(
+  BlurTransformation(25),
+  RoundedCornersTransformation(128, 0, CornerType.BOTTOM))))
 Glide.with(this).load(R.drawable.demo)
   .apply(bitmapTransform(multi))
-  .into((ImageView) findViewById(R.id.image));
+  .into(imageView))
+```
+
+# Step 4
+
+If you are using `SupportRSBlurTransformation`.
+
+```groovy
+android {
+  //...
+  defaultConfig {
+  //...
+  renderscriptTargetApi YOUR_TARGET_SDK_VERSION as int
+  renderscriptSupportModeEnabled true
+  }
+}
 ```
 
 ## Transformations
@@ -94,6 +109,7 @@ Icon | Application
 ------------ | -------------
 <img src="https://lh6.ggpht.com/6zKH_uQY1bxCwXL4DLo_uoFEOXdShi3BgmN6XRHlaJ-oA1svmq6y1PZkmO50nWQn2Lg=w300-rw" width="48" height="48" /> | [Ameba Ownd](https://play.google.com/store/apps/details?id=jp.co.cyberagent.madrid)
 <img src="https://lh3.googleusercontent.com/ZOrekp-ho-ecWG1TyvuOs0LoB5M4QYWCCLS5lFbAHhp_SklSd06544ENG3uC97zGWes=w300-rw" width="48" height="48" /> | [AbemaTV](https://play.google.com/store/apps/details?id=tv.abema)
+<img src="https://lh3.googleusercontent.com/eikxMAKKMU2O-rV-oUg04dGp-O4Aoje91kffDlnCB_3DCIPDzzADxdBOdPCW18Lmqw=w300-rw" width="48" height="48" /> | [TV Time](https://play.google.com/store/apps/details?id=com.tozelabs.tvshowtime)
 
 Developed By
 -------

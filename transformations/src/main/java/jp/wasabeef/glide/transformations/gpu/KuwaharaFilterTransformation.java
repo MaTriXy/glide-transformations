@@ -17,7 +17,9 @@ package jp.wasabeef.glide.transformations.gpu;
  */
 
 import java.security.MessageDigest;
-import jp.co.cyberagent.android.gpuimage.GPUImageKuwaharaFilter;
+
+import androidx.annotation.NonNull;
+import jp.co.cyberagent.android.gpuimage.filter.GPUImageKuwaharaFilter;
 
 /**
  * Kuwahara all the colors in the image.
@@ -30,7 +32,6 @@ public class KuwaharaFilterTransformation extends GPUFilterTransformation {
   private static final int VERSION = 1;
   private static final String ID =
       "jp.wasabeef.glide.transformations.gpu.KuwaharaFilterTransformation." + VERSION;
-  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
   private int radius;
 
@@ -45,19 +46,23 @@ public class KuwaharaFilterTransformation extends GPUFilterTransformation {
     filter.setRadius(this.radius);
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "KuwaharaFilterTransformation(radius=" + radius + ")";
   }
 
-  @Override public boolean equals(Object o) {
+  @Override
+  public boolean equals(Object o) {
     return o instanceof KuwaharaFilterTransformation;
   }
 
-  @Override public int hashCode() {
-    return ID.hashCode();
+  @Override
+  public int hashCode() {
+    return ID.hashCode() + radius * 10;
   }
 
-  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
-    messageDigest.update(ID_BYTES);
+  @Override
+  public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+    messageDigest.update((ID + radius).getBytes(CHARSET));
   }
 }

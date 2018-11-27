@@ -23,16 +23,17 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.support.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 
 import java.security.MessageDigest;
+
+import androidx.annotation.NonNull;
 
 public class RoundedCornersTransformation extends BitmapTransformation {
 
   private static final int VERSION = 1;
   private static final String ID = "jp.wasabeef.glide.transformations.RoundedCornersTransformation." + VERSION;
-  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
   public enum CornerType {
     ALL,
@@ -58,8 +59,9 @@ public class RoundedCornersTransformation extends BitmapTransformation {
     this.cornerType = cornerType;
   }
 
-  @Override protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
-      @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+  @Override
+  protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
+                             @NonNull Bitmap toTransform, int outWidth, int outHeight) {
     int width = toTransform.getWidth();
     int height = toTransform.getHeight();
 
@@ -204,7 +206,7 @@ public class RoundedCornersTransformation extends BitmapTransformation {
   }
 
   private void drawOtherBottomRightRoundRect(Canvas canvas, Paint paint, float right,
-      float bottom) {
+                                             float bottom) {
     canvas.drawRoundRect(new RectF(margin, margin, right, margin + diameter), radius, radius,
         paint);
     canvas.drawRoundRect(new RectF(margin, margin, margin + diameter, bottom), radius, radius,
@@ -213,7 +215,7 @@ public class RoundedCornersTransformation extends BitmapTransformation {
   }
 
   private void drawDiagonalFromTopLeftRoundRect(Canvas canvas, Paint paint, float right,
-      float bottom) {
+                                                float bottom) {
     canvas.drawRoundRect(new RectF(margin, margin, margin + diameter, margin + diameter), radius,
         radius, paint);
     canvas.drawRoundRect(new RectF(right - diameter, bottom - diameter, right, bottom), radius,
@@ -223,7 +225,7 @@ public class RoundedCornersTransformation extends BitmapTransformation {
   }
 
   private void drawDiagonalFromTopRightRoundRect(Canvas canvas, Paint paint, float right,
-      float bottom) {
+                                                 float bottom) {
     canvas.drawRoundRect(new RectF(right - diameter, margin, right, margin + diameter), radius,
         radius, paint);
     canvas.drawRoundRect(new RectF(margin, bottom - diameter, margin + diameter, bottom), radius,
@@ -232,20 +234,28 @@ public class RoundedCornersTransformation extends BitmapTransformation {
     canvas.drawRect(new RectF(margin + radius, margin + radius, right, bottom), paint);
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "RoundedTransformation(radius=" + radius + ", margin=" + margin + ", diameter="
         + diameter + ", cornerType=" + cornerType.name() + ")";
   }
 
-  @Override public boolean equals(Object o) {
-    return o instanceof RoundedCornersTransformation;
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof RoundedCornersTransformation &&
+        ((RoundedCornersTransformation) o).radius == radius &&
+        ((RoundedCornersTransformation) o).diameter == diameter &&
+        ((RoundedCornersTransformation) o).margin == margin &&
+        ((RoundedCornersTransformation) o).cornerType == cornerType;
   }
 
-  @Override public int hashCode() {
-    return ID.hashCode();
+  @Override
+  public int hashCode() {
+    return ID.hashCode() + radius * 10000 + diameter * 1000 + margin * 100 + cornerType.ordinal() * 10;
   }
 
-  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
-    messageDigest.update(ID_BYTES);
+  @Override
+  public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+    messageDigest.update((ID + radius + diameter + margin + cornerType).getBytes(CHARSET));
   }
 }

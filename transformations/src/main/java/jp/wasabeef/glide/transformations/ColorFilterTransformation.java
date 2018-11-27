@@ -22,16 +22,18 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.support.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+
 import java.security.MessageDigest;
+
+import androidx.annotation.NonNull;
 
 public class ColorFilterTransformation extends BitmapTransformation {
 
   private static final int VERSION = 1;
   private static final String ID =
       "jp.wasabeef.glide.transformations.ColorFilterTransformation." + VERSION;
-  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
   private int color;
 
@@ -39,8 +41,9 @@ public class ColorFilterTransformation extends BitmapTransformation {
     this.color = color;
   }
 
-  @Override protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
-      @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+  @Override
+  protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
+                             @NonNull Bitmap toTransform, int outWidth, int outHeight) {
     int width = toTransform.getWidth();
     int height = toTransform.getHeight();
 
@@ -57,19 +60,24 @@ public class ColorFilterTransformation extends BitmapTransformation {
     return bitmap;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "ColorFilterTransformation(color=" + color + ")";
   }
 
-  @Override public boolean equals(Object o) {
-    return o instanceof ColorFilterTransformation;
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof ColorFilterTransformation &&
+        ((ColorFilterTransformation) o).color == color;
   }
 
-  @Override public int hashCode() {
-    return ID.hashCode();
+  @Override
+  public int hashCode() {
+    return ID.hashCode() + color * 10;
   }
 
-  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
-    messageDigest.update(ID_BYTES);
+  @Override
+  public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+    messageDigest.update((ID + color).getBytes(CHARSET));
   }
 }

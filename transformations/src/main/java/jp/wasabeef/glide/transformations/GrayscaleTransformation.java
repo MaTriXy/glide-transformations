@@ -22,19 +22,22 @@ import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
-import android.support.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+
 import java.security.MessageDigest;
+
+import androidx.annotation.NonNull;
 
 public class GrayscaleTransformation extends BitmapTransformation {
 
   private static final int VERSION = 1;
   private static final String ID =
       "jp.wasabeef.glide.transformations.GrayscaleTransformation." + VERSION;
-  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
-  @Override protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
-      @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+  @Override
+  protected Bitmap transform(@NonNull Context context, @NonNull BitmapPool pool,
+                             @NonNull Bitmap toTransform, int outWidth, int outHeight) {
     int width = toTransform.getWidth();
     int height = toTransform.getHeight();
 
@@ -52,19 +55,23 @@ public class GrayscaleTransformation extends BitmapTransformation {
     return bitmap;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "GrayscaleTransformation()";
   }
 
-  @Override public boolean equals(Object o) {
+  @Override
+  public boolean equals(Object o) {
     return o instanceof GrayscaleTransformation;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return ID.hashCode();
   }
 
-  @Override public void updateDiskCacheKey(MessageDigest messageDigest) {
-    messageDigest.update(ID_BYTES);
+  @Override
+  public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+    messageDigest.update((ID).getBytes(CHARSET));
   }
 }
