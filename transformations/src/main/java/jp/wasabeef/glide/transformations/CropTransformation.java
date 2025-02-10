@@ -1,14 +1,14 @@
 package jp.wasabeef.glide.transformations;
 
 /**
- * Copyright (C) 2018 Wasabeef
- *
+ * Copyright (C) 2020 Wasabeef
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,11 +21,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 
 import java.security.MessageDigest;
-
-import androidx.annotation.NonNull;
 
 public class CropTransformation extends BitmapTransformation {
 
@@ -61,7 +61,7 @@ public class CropTransformation extends BitmapTransformation {
     height = height == 0 ? toTransform.getHeight() : height;
 
     Bitmap.Config config =
-        toTransform.getConfig() != null ? toTransform.getConfig() : Bitmap.Config.ARGB_8888;
+      toTransform.getConfig() != null ? toTransform.getConfig() : Bitmap.Config.ARGB_8888;
     Bitmap bitmap = pool.get(width, height, config);
 
     bitmap.setHasAlpha(true);
@@ -75,6 +75,8 @@ public class CropTransformation extends BitmapTransformation {
     float left = (width - scaledWidth) / 2;
     float top = getTop(scaledHeight);
     RectF targetRect = new RectF(left, top, left + scaledWidth, top + scaledHeight);
+
+    setCanvasBitmapDensity(toTransform, bitmap);
 
     Canvas canvas = new Canvas(bitmap);
     canvas.drawBitmap(toTransform, null, targetRect, null);
@@ -103,9 +105,9 @@ public class CropTransformation extends BitmapTransformation {
   @Override
   public boolean equals(Object o) {
     return o instanceof CropTransformation &&
-        ((CropTransformation) o).width == width &&
-        ((CropTransformation) o).height == height &&
-        ((CropTransformation) o).cropType == cropType;
+      ((CropTransformation) o).width == width &&
+      ((CropTransformation) o).height == height &&
+      ((CropTransformation) o).cropType == cropType;
   }
 
   @Override

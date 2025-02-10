@@ -1,14 +1,14 @@
 package jp.wasabeef.glide.transformations;
 
 /**
- * Copyright (C) 2018 Wasabeef
- *
+ * Copyright (C) 2020 Wasabeef
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,21 +24,20 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 
 import java.security.MessageDigest;
-
-import androidx.annotation.NonNull;
-import jp.wasabeef.glide.transformations.internal.Utils;
 
 public class MaskTransformation extends BitmapTransformation {
 
   private static final int VERSION = 1;
   private static final String ID =
-      "jp.wasabeef.glide.transformations.MaskTransformation." + VERSION;
+    "jp.wasabeef.glide.transformations.MaskTransformation." + VERSION;
 
-  private static Paint paint = new Paint();
-  private int maskId;
+  private static final Paint paint = new Paint();
+  private final int maskId;
 
   static {
     paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
@@ -62,7 +61,9 @@ public class MaskTransformation extends BitmapTransformation {
     Bitmap bitmap = pool.get(width, height, Bitmap.Config.ARGB_8888);
     bitmap.setHasAlpha(true);
 
-    Drawable mask = Utils.getMaskDrawable(context.getApplicationContext(), maskId);
+    Drawable mask = context.getDrawable(maskId);
+
+    setCanvasBitmapDensity(toTransform, bitmap);
 
     Canvas canvas = new Canvas(bitmap);
     mask.setBounds(0, 0, width, height);
@@ -80,7 +81,7 @@ public class MaskTransformation extends BitmapTransformation {
   @Override
   public boolean equals(Object o) {
     return o instanceof MaskTransformation &&
-        ((MaskTransformation) o).maskId == maskId;
+      ((MaskTransformation) o).maskId == maskId;
   }
 
   @Override

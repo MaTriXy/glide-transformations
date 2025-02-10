@@ -1,14 +1,14 @@
 package jp.wasabeef.glide.transformations.gpu;
 
 /**
- * Copyright (C) 2018 Wasabeef
- *
+ * Copyright (C) 2020 Wasabeef
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,9 +16,10 @@ package jp.wasabeef.glide.transformations.gpu;
  * limitations under the License.
  */
 
+import androidx.annotation.NonNull;
+
 import java.security.MessageDigest;
 
-import androidx.annotation.NonNull;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageToonFilter;
 
 /**
@@ -30,10 +31,10 @@ public class ToonFilterTransformation extends GPUFilterTransformation {
 
   private static final int VERSION = 1;
   private static final String ID =
-      "jp.wasabeef.glide.transformations.gpu.ToonFilterTransformation." + VERSION;
+    "jp.wasabeef.glide.transformations.gpu.ToonFilterTransformation." + VERSION;
 
-  private float threshold;
-  private float quantizationLevels;
+  private final float threshold;
+  private final float quantizationLevels;
 
   public ToonFilterTransformation() {
     this(.2f, 10.0f);
@@ -51,14 +52,14 @@ public class ToonFilterTransformation extends GPUFilterTransformation {
   @Override
   public String toString() {
     return "ToonFilterTransformation(threshold=" + threshold + ",quantizationLevels="
-        + quantizationLevels + ")";
+      + quantizationLevels + ")";
   }
 
   @Override
   public boolean equals(Object o) {
     return o instanceof ToonFilterTransformation &&
-        ((ToonFilterTransformation) o).threshold == threshold &&
-        ((ToonFilterTransformation) o).quantizationLevels == quantizationLevels;
+      ((ToonFilterTransformation) o).threshold == threshold &&
+      ((ToonFilterTransformation) o).quantizationLevels == quantizationLevels;
   }
 
   @Override

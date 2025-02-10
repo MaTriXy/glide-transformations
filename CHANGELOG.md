@@ -1,6 +1,43 @@
 Change Log
 ==========
 
+Version 4.3.0 *(2020-09-27)*
+----------------------------
+
+Feature
+- Remove support v8 renderscript (Please use BlurTransformation)
+
+Update
+- minSdkVersion -> 21
+- GPUImage -> 2.1.0
+- Cleanup codes
+
+Version 4.2.0 *(2020-09-15)*
+----------------------------
+
+Update:
+- Compile & Target SDK Version 28 -> 30
+- GPUImage 2.0.3 -> 2.0.4
+- Glide 4.9.0 -> 4.11.0
+
+Bugfix:
+- RoundedCornersTransformation with DIAGONAL_FROM_TOP_LEFT does not work [#178](https://github.com/wasabeef/glide-transformations/pull/178)
+
+Version 4.1.0 *(2019-08-15)*
+----------------------------
+
+Add:
+- Support to CropCircle with Border [#136](https://github.com/wasabeef/glide-transformations/pull/136)
+
+Update:
+- Glide to 4.9.0
+- Android Gradle plugin to 3.6.0-alpha05
+- Kotlin to 1.3.41	
+
+Bug Fix:
+- Fix diffrent density [#147](https://github.com/wasabeef/glide-transformations/pull/147)
+
+
 Version 4.0.1 *(2018-11-20)*
 ----------------------------
 

@@ -1,14 +1,14 @@
 package jp.wasabeef.glide.transformations;
 
 /**
- * Copyright (C) 2018 Wasabeef
- *
+ * Copyright (C) 2020 Wasabeef
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,11 +24,11 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 
 import java.security.MessageDigest;
-
-import androidx.annotation.NonNull;
 
 public class RoundedCornersTransformation extends BitmapTransformation {
 
@@ -43,10 +43,10 @@ public class RoundedCornersTransformation extends BitmapTransformation {
     DIAGONAL_FROM_TOP_LEFT, DIAGONAL_FROM_TOP_RIGHT
   }
 
-  private int radius;
-  private int diameter;
-  private int margin;
-  private CornerType cornerType;
+  private final int radius;
+  private final int diameter;
+  private final int margin;
+  private final CornerType cornerType;
 
   public RoundedCornersTransformation(int radius, int margin) {
     this(radius, margin, CornerType.ALL);
@@ -67,6 +67,8 @@ public class RoundedCornersTransformation extends BitmapTransformation {
 
     Bitmap bitmap = pool.get(width, height, Bitmap.Config.ARGB_8888);
     bitmap.setHasAlpha(true);
+
+    setCanvasBitmapDensity(toTransform, bitmap);
 
     Canvas canvas = new Canvas(bitmap);
     Paint paint = new Paint();
@@ -134,47 +136,47 @@ public class RoundedCornersTransformation extends BitmapTransformation {
 
   private void drawTopLeftRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
     canvas.drawRoundRect(new RectF(margin, margin, margin + diameter, margin + diameter), radius,
-        radius, paint);
+      radius, paint);
     canvas.drawRect(new RectF(margin, margin + radius, margin + radius, bottom), paint);
     canvas.drawRect(new RectF(margin + radius, margin, right, bottom), paint);
   }
 
   private void drawTopRightRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
     canvas.drawRoundRect(new RectF(right - diameter, margin, right, margin + diameter), radius,
-        radius, paint);
+      radius, paint);
     canvas.drawRect(new RectF(margin, margin, right - radius, bottom), paint);
     canvas.drawRect(new RectF(right - radius, margin + radius, right, bottom), paint);
   }
 
   private void drawBottomLeftRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
     canvas.drawRoundRect(new RectF(margin, bottom - diameter, margin + diameter, bottom), radius,
-        radius, paint);
+      radius, paint);
     canvas.drawRect(new RectF(margin, margin, margin + diameter, bottom - radius), paint);
     canvas.drawRect(new RectF(margin + radius, margin, right, bottom), paint);
   }
 
   private void drawBottomRightRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
     canvas.drawRoundRect(new RectF(right - diameter, bottom - diameter, right, bottom), radius,
-        radius, paint);
+      radius, paint);
     canvas.drawRect(new RectF(margin, margin, right - radius, bottom), paint);
     canvas.drawRect(new RectF(right - radius, margin, right, bottom - radius), paint);
   }
 
   private void drawTopRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
     canvas.drawRoundRect(new RectF(margin, margin, right, margin + diameter), radius, radius,
-        paint);
+      paint);
     canvas.drawRect(new RectF(margin, margin + radius, right, bottom), paint);
   }
 
   private void drawBottomRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
     canvas.drawRoundRect(new RectF(margin, bottom - diameter, right, bottom), radius, radius,
-        paint);
+      paint);
     canvas.drawRect(new RectF(margin, margin, right, bottom - radius), paint);
   }
 
   private void drawLeftRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
     canvas.drawRoundRect(new RectF(margin, margin, margin + diameter, bottom), radius, radius,
-        paint);
+      paint);
     canvas.drawRect(new RectF(margin + radius, margin, right, bottom), paint);
   }
 
@@ -185,22 +187,22 @@ public class RoundedCornersTransformation extends BitmapTransformation {
 
   private void drawOtherTopLeftRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
     canvas.drawRoundRect(new RectF(margin, bottom - diameter, right, bottom), radius, radius,
-        paint);
+      paint);
     canvas.drawRoundRect(new RectF(right - diameter, margin, right, bottom), radius, radius, paint);
     canvas.drawRect(new RectF(margin, margin, right - radius, bottom - radius), paint);
   }
 
   private void drawOtherTopRightRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
     canvas.drawRoundRect(new RectF(margin, margin, margin + diameter, bottom), radius, radius,
-        paint);
+      paint);
     canvas.drawRoundRect(new RectF(margin, bottom - diameter, right, bottom), radius, radius,
-        paint);
+      paint);
     canvas.drawRect(new RectF(margin + radius, margin, right, bottom - radius), paint);
   }
 
   private void drawOtherBottomLeftRoundRect(Canvas canvas, Paint paint, float right, float bottom) {
     canvas.drawRoundRect(new RectF(margin, margin, right, margin + diameter), radius, radius,
-        paint);
+      paint);
     canvas.drawRoundRect(new RectF(right - diameter, margin, right, bottom), radius, radius, paint);
     canvas.drawRect(new RectF(margin, margin + radius, right - radius, bottom), paint);
   }
@@ -208,28 +210,28 @@ public class RoundedCornersTransformation extends BitmapTransformation {
   private void drawOtherBottomRightRoundRect(Canvas canvas, Paint paint, float right,
                                              float bottom) {
     canvas.drawRoundRect(new RectF(margin, margin, right, margin + diameter), radius, radius,
-        paint);
+      paint);
     canvas.drawRoundRect(new RectF(margin, margin, margin + diameter, bottom), radius, radius,
-        paint);
+      paint);
     canvas.drawRect(new RectF(margin + radius, margin + radius, right, bottom), paint);
   }
 
   private void drawDiagonalFromTopLeftRoundRect(Canvas canvas, Paint paint, float right,
                                                 float bottom) {
     canvas.drawRoundRect(new RectF(margin, margin, margin + diameter, margin + diameter), radius,
-        radius, paint);
+      radius, paint);
     canvas.drawRoundRect(new RectF(right - diameter, bottom - diameter, right, bottom), radius,
-        radius, paint);
-    canvas.drawRect(new RectF(margin, margin + radius, right - diameter, bottom), paint);
-    canvas.drawRect(new RectF(margin + diameter, margin, right, bottom - radius), paint);
+      radius, paint);
+    canvas.drawRect(new RectF(margin, margin + radius, right - radius, bottom), paint);
+    canvas.drawRect(new RectF(margin + radius, margin, right, bottom - radius), paint);
   }
 
   private void drawDiagonalFromTopRightRoundRect(Canvas canvas, Paint paint, float right,
                                                  float bottom) {
     canvas.drawRoundRect(new RectF(right - diameter, margin, right, margin + diameter), radius,
-        radius, paint);
+      radius, paint);
     canvas.drawRoundRect(new RectF(margin, bottom - diameter, margin + diameter, bottom), radius,
-        radius, paint);
+      radius, paint);
     canvas.drawRect(new RectF(margin, margin, right - radius, bottom - radius), paint);
     canvas.drawRect(new RectF(margin + radius, margin + radius, right, bottom), paint);
   }
@@ -237,16 +239,16 @@ public class RoundedCornersTransformation extends BitmapTransformation {
   @Override
   public String toString() {
     return "RoundedTransformation(radius=" + radius + ", margin=" + margin + ", diameter="
-        + diameter + ", cornerType=" + cornerType.name() + ")";
+      + diameter + ", cornerType=" + cornerType.name() + ")";
   }
 
   @Override
   public boolean equals(Object o) {
     return o instanceof RoundedCornersTransformation &&
-        ((RoundedCornersTransformation) o).radius == radius &&
-        ((RoundedCornersTransformation) o).diameter == diameter &&
-        ((RoundedCornersTransformation) o).margin == margin &&
-        ((RoundedCornersTransformation) o).cornerType == cornerType;
+      ((RoundedCornersTransformation) o).radius == radius &&
+      ((RoundedCornersTransformation) o).diameter == diameter &&
+      ((RoundedCornersTransformation) o).margin == margin &&
+      ((RoundedCornersTransformation) o).cornerType == cornerType;
   }
 
   @Override
